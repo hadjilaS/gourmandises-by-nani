@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/* ============================================================
+   GOURMANDISES BY NANI — Design tokens
+   Palette : blanc cassé / beige / rose poudré / doré / brun chocolat
+   ============================================================ */
+:root {
+  --color-cream: #fbf6f1;
+  --color-beige: #ede1d3;
+  --color-rose-50: #fdf3f5;
+  --color-rose-100: #f7dde3;
+  --color-rose-300: #edb9c6;
+  --color-rose-500: #d98ba0;
+  --color-rose-700: #b96b81;
+  --color-gold-300: #e4c789;
+  --color-gold-500: #c6a15b;
+  --color-gold-700: #9c7d3f;
+  --color-chocolate-500: #6b4136;
+  --color-chocolate-700: #4a2e27;
+  --color-chocolate-900: #2b1e1b;
+  --color-ink: #2b1e1b;
+
+  --shadow-soft: 0 10px 40px -12px rgba(75, 46, 39, 0.18);
+  --shadow-elegant: 0 20px 60px -20px rgba(75, 46, 39, 0.28);
+  --shadow-gold: 0 8px 30px -8px rgba(198, 161, 91, 0.45);
+
+  --font-display: var(--font-playfair), "Playfair Display", serif;
+  --font-body: var(--font-poppins), "Poppins", sans-serif;
+}
+
+@theme inline {
+  --color-cream: var(--color-cream);
+  --color-beige: var(--color-beige);
+  --color-rose-50: var(--color-rose-50);
+  --color-rose-100: var(--color-rose-100);
+  --color-rose-300: var(--color-rose-300);
+  --color-rose-500: var(--color-rose-500);
+  --color-rose-700: var(--color-rose-700);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-700: var(--color-gold-700);
+  --color-chocolate-500: var(--color-chocolate-500);
+  --color-chocolate-700: var(--color-chocolate-700);
+  --color-chocolate-900: var(--color-chocolate-900);
+  --color-ink: var(--color-ink);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--color-rose-300);
+  color: var(--color-chocolate-900);
+}
+
+/* Elegant gold scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-gold-300), var(--color-gold-500));
+  border-radius: 999px;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(90deg, var(--color-gold-700), var(--color-gold-300), var(--color-gold-700));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-500) 30%,
+    var(--color-gold-300) 50%,
+    var(--color-gold-500) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Swiper testimonials theming */
+.testimonials-swiper .swiper-pagination-bullet {
+  background: var(--color-rose-300);
+  opacity: 1;
+}
+.testimonials-swiper .swiper-pagination-bullet-active {
+  background: var(--color-gold-500);
+}
+.testimonials-swiper .swiper-button-next,
+.testimonials-swiper .swiper-button-prev {
+  color: var(--color-chocolate-700);
+  transform: scale(0.6);
+}
+.testimonials-swiper .swiper-button-next:hover,
+.testimonials-swiper .swiper-button-prev:hover {
+  color: var(--color-rose-700);
+}
+
+/* Visible keyboard focus (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
