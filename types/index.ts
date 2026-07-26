@@ -46,6 +46,31 @@ export interface ProcessStep {
   icon: string;
 }
 
+export type OrderStatus =
+  | "nouveau"
+  | "confirme"
+  | "en_preparation"
+  | "livre"
+  | "annule";
+
+export interface OrderRecord {
+  id: string;
+  createdAt: string;
+  status: OrderStatus;
+  name: string;
+  phone: string;
+  email: string;
+  eventDate: string;
+  guestCount: string;
+  cakeType: string;
+  flavor: string;
+  colors: string;
+  decoration: string;
+  customText?: string;
+  message?: string;
+  inspirationPhotoUrl?: string;
+}
+
 export interface OrderFormData {
   name: string;
   phone: string;
@@ -58,5 +83,5 @@ export interface OrderFormData {
   decoration: string;
   customText?: string;
   message?: string;
-  inspirationPhoto?: FileList;
+  inspirationPhotoUrl?: string;
 }
