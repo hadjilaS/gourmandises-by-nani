@@ -81,6 +81,82 @@ Dépose tes images dans `public/images/gallery/`, puis référence-les dans :
 Sans Supabase configuré, les demandes de commande sont simplement journalisées
 côté serveur — à connecter avant la mise en production pour ne rien perdre.
 
+## 🔐 Espace admin
+
+Accessible sur `/admin` une fois le site lancé.
+
+1. Génère ton mot de passe admin :
+   ```bash
+   node scripts/hash-password.mjs "TonMotDePasse"
+   ```
+2. Copie `.env.example` en `.env.local` et renseigne :
+   ```
+   ADMIN_EMAIL=ton-email@exemple.com
+   ADMIN_PASSWORD_HASH=... (collé tel quel depuis la commande précédente, avec les \$)
+   SESSION_SECRET=... (chaîne aléatoire longue, ex : node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+   ```
+   ⚠️ Ne retire pas les `\$` dans `ADMIN_PASSWORD_HASH` : Next.js les interprète sinon comme des variables et casse le mot de passe.
+3. Lance le site (`npm run dev`) et connecte-toi sur `http://localhost:3000/admin`.
+
+**Identifiants par défaut fournis dans `.env.example`** (à changer absolument avant mise en ligne) :
+- Email : `admin@gourmandisesbynani.com`
+- Mot de passe : `GourmandisesByNani2026!`
+
+**Fonctionnalités de l'espace admin :**
+- Tableau de bord : statistiques (commandes, nouvelles demandes, événements à venir)
+- Commandes : liste filtrable/recherchable, détail complet, changement de statut, suppression
+- Créations : gérer les 9 cartes de la page d'accueil (ajout avec upload d'image, suppression)
+- Galerie : gérer les photos filtrables par catégorie (ajout avec upload d'image, suppression)
+
+Les données sont stockées automatiquement dans Supabase si tu l'as
+configuré (voir section "Mise en ligne sur Vercel" ci-dessous), sinon
+en local dans `data/db/*.json` (créés automatiquement, pratique pour
+tester sans rien configurer — mais ne persiste pas sur Vercel).
+
+## 🌐 Mise en ligne sur Vercel (important)
+
+Vercel est **serverless** : le système de fichiers n'est pas persistant.
+Sans Supabase + Cloudinary configurés, tout ce que l'admin ajoute
+(commandes, nouvelles photos) **disparaîtra** au prochain déploiement.
+
+**Checklist avant/après déploiement sur Vercel :**
+
+1. **Supabase** (stockage des commandes, créations, galerie)
+   - Crée un projet sur https://supabase.com
+   - Va dans SQL Editor, colle et exécute le contenu de `supabase/schema.sql`
+   - Récupère l'URL et la clé `service_role` dans Project Settings → API
+   - (Optionnel mais recommandé) Transfère tes créations/photos actuelles :
+     ```bash
+     npx tsx scripts/seed-supabase.ts
+     ```
+     (nécessite un `.env.local` local avec tes clés Supabase au préalable)
+
+2. **Cloudinary** (stockage des images uploadées depuis l'admin)
+   - Crée un compte sur https://cloudinary.com
+   - Récupère Cloud Name, API Key, API Secret sur le Dashboard
+
+3. **Dans Vercel → Project → Settings → Environment Variables**, ajoute :
+   ```
+   ADMIN_EMAIL
+   ADMIN_PASSWORD_HASH   (garde les \$ !)
+   SESSION_SECRET
+   NEXT_PUBLIC_SUPABASE_URL
+   SUPABASE_SERVICE_ROLE_KEY
+   CLOUDINARY_CLOUD_NAME
+   CLOUDINARY_API_KEY
+   CLOUDINARY_API_SECRET
+   ```
+   Puis redéploie (Vercel → Deployments → ⋯ → Redeploy).
+
+4. Vérifie sur le site en ligne : connecte-toi sur `/admin`, ajoute une
+   commande test depuis le formulaire public, vérifie qu'elle apparaît
+   bien dans `/admin/commandes` — puis redéploie une seconde fois pour
+   confirmer qu'elle est toujours là (preuve que ça persiste vraiment).
+
+Sans Supabase/Cloudinary configurés, le site fonctionne quand même
+(mode local automatique), mais uniquement pour développer/tester en
+local — pas pour un usage réel en production sur Vercel.
+
 ## 🌐 Mise en ligne (hébergement)
 
 Ce projet est prêt à être déployé sur n'importe quel hébergeur compatible
@@ -102,3 +178,5 @@ https://vercel.com et le déploiement se fait automatiquement.
 - Accessibilité : focus clavier visible, `prefers-reduced-motion` respecté,
   contrastes soignés
 - Pages Mentions légales & Politique de confidentialité
+- Espace admin sécurisé (`/admin`) : tableau de bord, gestion des commandes,
+  gestion des créations et de la galerie, upload d'images
